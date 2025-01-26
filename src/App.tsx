@@ -1,4 +1,4 @@
-import { Box, Button, Center, Code, Flex, IconButton, Input, Text } from '@chakra-ui/react'
+import { Box, Button, Center, Flex, IconButton, Input, Text } from '@chakra-ui/react'
 import { ClipboardIconButton, ClipboardRoot } from "@/components/ui/clipboard"
 import '@/App.css'
 
@@ -13,10 +13,30 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { CiEdit } from 'react-icons/ci'
+
+import {
+    FileUploadList,
+    FileUploadRoot,
+    FileUploadTrigger,
+} from "@/components/ui/file-upload"
+
+import { CiEdit, CiSaveUp2 } from 'react-icons/ci'
 import { useState } from 'react'
 
 function App() {
+
+    const UploadButton = () => {
+        return (
+            <FileUploadRoot accept={["video/*"]}>
+                <FileUploadTrigger asChild>
+                    <Button>
+                        <CiSaveUp2 /> Upload file
+                    </Button>
+                </FileUploadTrigger>
+                <FileUploadList />
+            </FileUploadRoot>
+        )
+    }
 
     const VideoController = () => {
         interface TimeBoxProps {
@@ -102,7 +122,7 @@ function App() {
         return (
             <Flex width={'100%'} justify={'space-between'} padding={'15px'}>
                 <Flex flex={'1'} justify={'flex-start'}>
-                    <Button>test</Button>
+                    <UploadButton></UploadButton>
                 </Flex>
                 <Flex flex={'1'} justify={'center'}>
                     <VideoController></VideoController>
