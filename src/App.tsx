@@ -1,5 +1,5 @@
 import { Box, Button, Center, Flex, IconButton, Input, Text } from '@chakra-ui/react'
-import { ClipboardIconButton, ClipboardRoot } from "@/components/ui/clipboard"
+import { ClipboardIconButton, ClipboardRoot } from "@/components/chakra-ui/clipboard"
 import '@/App.css'
 
 import {
@@ -12,7 +12,7 @@ import {
     DialogRoot,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/chakra-ui/dialog"
 
 import { CiEdit, CiSaveUp2 } from 'react-icons/ci'
 import { useEffect, useRef, useState } from 'react'
@@ -38,7 +38,7 @@ function App() {
     const handleUploadClick = () => {
         fileInputRef.current?.click();
     };
-    
+
 
     const UploadButton = () => {
         return (
@@ -84,7 +84,7 @@ function App() {
                     </ClipboardRoot>
                 </Flex>
                 <Flex gap={'2'}>
-                    
+
                     <Button size={'sm'}>-1</Button>
                     <Button size={'sm'}>-30</Button>
                     <TimeBox inputTime='10:00:00'></TimeBox>
@@ -134,7 +134,7 @@ function App() {
                 </DialogContent>
             </DialogRoot>
         )
-        
+
     }
 
     const VideoHeader = () => {
@@ -152,7 +152,7 @@ function App() {
                 </Flex>
             </Flex>
         )
-    }    
+    }
 
 
     return (
