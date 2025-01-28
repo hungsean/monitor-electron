@@ -15,8 +15,16 @@ const OpenFileButton = () => {
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
+            console.log(file.name);
             const url = URL.createObjectURL(file);
-            eventBus.emit(EVENT_TYPES.UPDATE_VIDEO_URL, url)
+            const filename_no_ext = file.name.split('.')[0];
+            const filename_split = filename_no_ext.split('_');
+            console.log(filename_split);
+            const [start_time, end_time] = filename_split.slice(-2);
+            console.log("start time", start_time);
+            console.log("end time", end_time);
+
+            eventBus.emit(EVENT_TYPES.UPDATE_VIDEO_URL, url);
         }
     };
 
@@ -30,7 +38,7 @@ const OpenFileButton = () => {
                 type="file"
                 ref={fileInputRef}
                 onChange={handleFileChange}
-                accept="video/*"
+                accept=".mp4,video/mp4"
                 style={{ display: 'none' }}
             />
             <Button onClick={handleUploadClick}>
