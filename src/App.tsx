@@ -14,27 +14,46 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 
-import {
-    FileUploadList,
-    FileUploadRoot,
-    FileUploadTrigger,
-} from "@/components/ui/file-upload"
-
 import { CiEdit, CiSaveUp2 } from 'react-icons/ci'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 function App() {
+    const [videoUrl, setVideoUrl] = useState<string | undefined>(undefined);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (videoUrl) {
+            console.log('Video URL updated:', videoUrl);
+        }
+    }, [videoUrl]);
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            setVideoUrl(url);
+        }
+    };
+
+    const handleUploadClick = () => {
+        fileInputRef.current?.click();
+    };
+    
 
     const UploadButton = () => {
         return (
-            <FileUploadRoot accept={["video/*"]}>
-                <FileUploadTrigger asChild>
-                    <Button>
-                        <CiSaveUp2 /> Upload file
-                    </Button>
-                </FileUploadTrigger>
-                <FileUploadList />
-            </FileUploadRoot>
+            <>
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept="video/*"
+                    style={{ display: 'none' }}
+                />
+                <Button onClick={handleUploadClick}>
+                    <CiSaveUp2 /> Upload file
+                </Button>
+            </>
         )
     }
 
@@ -139,7 +158,9 @@ function App() {
     return (
         <Flex direction={'column'}>
             <VideoHeader></VideoHeader>
-            <video></video>
+            <video controls key={videoUrl}>
+                <source src={videoUrl} type="video/mp4" />
+            </video>
         </Flex>
     )
 }
