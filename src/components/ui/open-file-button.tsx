@@ -2,9 +2,12 @@ import { EVENT_TYPES, eventBus } from "@/utils/event-bus";
 import { Button } from "@chakra-ui/react";
 import { useRef } from "react";
 import { CiSaveUp2 } from "react-icons/ci";
+import { useStore } from "@/utils/store";
 
 
 const OpenFileButton = () => {
+
+    const { data, setData } = useStore();
 
     // temp testing function
     // const [videoUrl, setVideoUrl] = useState<string | undefined>(undefined);
@@ -23,6 +26,16 @@ const OpenFileButton = () => {
             const [start_time, end_time] = filename_split.slice(-2);
             console.log("start time", start_time);
             console.log("end time", end_time);
+
+            setData({ START_REAL_TIME : start_time});
+            setData({ END_REAL_TIME : end_time });
+
+            console.log(data)
+            console.log(data.START_REAL_TIME);
+            console.log(data.END_REAL_TIME);
+ 
+
+
 
             eventBus.emit(EVENT_TYPES.UPDATE_VIDEO_URL, url);
         }
