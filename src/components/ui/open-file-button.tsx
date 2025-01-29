@@ -3,6 +3,7 @@ import { Button } from "@chakra-ui/react";
 import { useRef } from "react";
 import { CiSaveUp2 } from "react-icons/ci";
 import { useStore } from "@/utils/store";
+import TimeManager from "@/utils/time-manager";
 
 
 const OpenFileButton = () => {
@@ -23,19 +24,21 @@ const OpenFileButton = () => {
             const filename_no_ext = file.name.split('.')[0];
             const filename_split = filename_no_ext.split('_');
             console.log(filename_split);
-            const [start_time, end_time] = filename_split.slice(-2);
-            console.log("start time", start_time);
-            console.log("end time", end_time);
+            const [start_datetime_string, end_datetime_string] = filename_split.slice(-2);
+            console.log("start time", start_datetime_string);
+            console.log("end time", end_datetime_string);
+            const start_time_string = start_datetime_string.split('T')[1];
+            const end_time_string = end_datetime_string.split('T')[1];
+            const start_time = new TimeManager(start_time_string);
+            const end_time = new TimeManager(end_time_string);
 
-            setData({ START_REAL_TIME : start_time});
-            setData({ END_REAL_TIME : end_time });
-
-            console.log(data)
-            console.log(data.START_REAL_TIME);
-            console.log(data.END_REAL_TIME);
- 
-
-
+            if (start_time.isLaterThan(end_time))
+            {
+                end_time.addHours(24);
+            }
+            
+            setData({ START_REAL_TIME: start_time });
+            setData({ END_REAL_TIME: end_time });
 
             eventBus.emit(EVENT_TYPES.UPDATE_VIDEO_URL, url);
         }

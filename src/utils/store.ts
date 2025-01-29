@@ -1,9 +1,10 @@
 import { create } from 'zustand';
+import TimeManager from './time-manager';
 
 // 定義具體的資料結構
 interface StoreData {
-    START_REAL_TIME?: string;
-    END_REAL_TIME?: string;
+    START_REAL_TIME?: TimeManager;
+    END_REAL_TIME?: TimeManager;
     // 可以加入更多需要的欄位
 }
 
