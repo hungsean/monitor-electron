@@ -2,13 +2,13 @@ import { EVENT_TYPES, eventBus } from "@/utils/event-bus";
 import { Button } from "@chakra-ui/react";
 import { useRef } from "react";
 import { CiSaveUp2 } from "react-icons/ci";
-import { useStore } from "@/utils/store";
+import { useAppStore } from "@/utils/store";
 import TimeManager from "@/utils/time-manager";
 
 
 const OpenFileButton = () => {
 
-    const { data, setData } = useStore();
+    const { data, setData } = useAppStore();
 
     // temp testing function
     // const [videoUrl, setVideoUrl] = useState<string | undefined>(undefined);

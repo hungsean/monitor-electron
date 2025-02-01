@@ -9,7 +9,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/chakra-ui/dialog"
-import { useStore } from "@/utils/store";
+import { useAppStore } from "@/utils/store";
 import TimeManager from "@/utils/time-manager";
 import { Button, Flex, IconButton, Input, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -18,7 +18,7 @@ import { CiEdit } from "react-icons/ci";
 const EditDialog = () => {
     const [start_time_string, setStartTimeString] = useState('');
     const [end_time_string, setEndTimeString] = useState('');
-    const { data, setData } = useStore();
+    const { data, setData } = useAppStore();
 
     useEffect(() => {
         setStartTimeString(data.START_REAL_TIME?.toString() ?? '');

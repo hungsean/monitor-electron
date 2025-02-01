@@ -1,12 +1,12 @@
 import { Box, Center, Text, Flex, Button } from "@chakra-ui/react";
 import { ClipboardRoot, ClipboardIconButton } from "../chakra-ui/clipboard";
-import { useStore } from "@/utils/store";
+import { useAppStore } from "@/utils/store";
 import { useEffect, useState } from "react";
 import TimeManager from "@/utils/time-manager";
 
 const VideoController = () => {
 
-    const { data, setData } = useStore()
+    const { data, setData } = useAppStore()
     
     const [start_time, setStartTime] = useState<string>('');
     const [end_time, setEndTime] = useState<string>('');
