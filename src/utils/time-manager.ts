@@ -3,12 +3,28 @@ class TimeManager {
     private minutes: number;
     private seconds: number;
 
-    constructor(time?: string | null) {
+    constructor(time?: string | number | null) {
         if (!time) {
             // 如果沒有輸入，設置為 00:00:00
             this.hours = 0;
             this.minutes = 0;
             this.seconds = 0;
+            return;
+        }
+
+        if (typeof time === 'number') {
+            // 處理秒數輸入
+            let totalSeconds = time;
+
+            this.hours = Math.floor(totalSeconds / 3600);
+            totalSeconds %= 3600;
+            if (totalSeconds < 0)
+            {
+                totalSeconds += 3600;
+            }
+            this.minutes = Math.floor(totalSeconds / 60);
+            this.seconds = totalSeconds % 60;
+
             return;
         }
 
@@ -62,7 +78,7 @@ class TimeManager {
 
     toString(): string {
         const formatNumber = (num: number): string => {
-            return num.toString().padStart(2, '0');
+            return Math.floor(num).toString().padStart(2, '0');
         };
 
         return `${formatNumber(this.hours)}:${formatNumber(this.minutes)}:${formatNumber(this.seconds)}`;
@@ -99,6 +115,11 @@ class TimeManager {
             this.minutes += 60;
         }
         return;
+    }
+
+    toSeconds(): number {
+        return this.hours * 3600 + this.minutes * 60 + this.seconds;
+        
     }
 
 

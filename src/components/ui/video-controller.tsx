@@ -10,8 +10,8 @@ const VideoController = () => {
     
     const [start_time, setStartTime] = useState<TimeManager>();
     const [end_time, setEndTime] = useState<TimeManager>();
-    const [current_time, setCurrentTime] = useState<string>('');
-    const [video_length, setVideoLength] = useState<number>();
+    const [current_time, setCurrentTime] = useState<TimeManager>();
+    const [video_length, setVideoLength] = useState<number>(0);
 
     useEffect(() => {
         setStartTime(data.START_REAL_TIME);
@@ -27,7 +27,16 @@ const VideoController = () => {
     }, [data.END_REAL_TIME]);
 
     useEffect(() => {
-        setCurrentTime(data.videoCurrentTime.toString());
+
+        const start_time_second = start_time?.toSeconds() ?? 0;
+        const end_time_second = end_time?.toSeconds() ?? 0;
+        const real_time_length = end_time_second - start_time_second
+        const temp_current_time = new TimeManager(start_time_second + (data.videoCurrentTime * real_time_length / video_length))
+        console.log(temp_current_time.toString())
+
+        setCurrentTime(temp_current_time);
+        
+
     }, [data.videoCurrentTime]);
 
     useEffect(() => {
@@ -84,7 +93,7 @@ const VideoController = () => {
     return (
         <Flex direction={'column'} align={'center'} gap={'2'}>
             <Flex gap={'2'}>
-                <TimeBox inputTime={current_time}></TimeBox>
+                <TimeBox inputTime={current_time?.toString() ?? ''}></TimeBox>
                 <ClipboardRoot value={""} timeout={400}>
                     <ClipboardIconButton />
                 </ClipboardRoot>
