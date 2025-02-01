@@ -6,6 +6,7 @@ const VideoMain = () => {
 
     const [videoUrl, setVideoUrl] = useState<string | undefined>(undefined);
     const videoRef = useRef<HTMLVideoElement>(null);
+    const rafRef = useRef<number>();
     const { setData } = useAppStore()
 
     useEffect(() => {
@@ -18,16 +19,6 @@ const VideoMain = () => {
         return () => unsubscribe();
     }, []);
 
-
-    const handleTimeUpdate = () => {
-        if (videoRef.current) {
-            setData({ videoCurrentTime: videoRef.current.currentTime });
-            // setData({ videoLength: videoRef.current.duration });
-            console.log("update time!", videoRef.current.currentTime);
-            // console.log("length: ", videoRef.current.duration);
-        }
-    };
-
     const handleVideoLengthUpdate = () => {
         if (videoRef.current) {
             setData({ videoLength: videoRef.current.duration });
@@ -35,13 +26,41 @@ const VideoMain = () => {
         }
     }
 
+    const handlePlay = () => {
+        const updateTime = () => {
+            if (videoRef.current) {
+                // 在這裡處理時間更新邏輯
+                setData({ videoCurrentTime: videoRef.current.currentTime });
+                console.log("update time!", videoRef.current.currentTime);
+            }
+
+            rafRef.current = requestAnimationFrame(updateTime);
+        };
+
+        updateTime();
+    };
+
+    useEffect(() => {
+        // 清理函數
+        return () => {
+            if (rafRef.current) {
+                cancelAnimationFrame(rafRef.current);
+            }
+        };
+    }, []);
+
     return (
         <video
             controls
             key={videoUrl}
             ref={videoRef}
             onLoadedMetadata={handleVideoLengthUpdate}
-            onTimeUpdate={handleTimeUpdate}
+            onPlay={handlePlay}
+            onPause={() => {
+                if (rafRef.current) {
+                    cancelAnimationFrame(rafRef.current);
+                }
+            }}
         >
             <source src={videoUrl} type="video/mp4" />
         </video>
