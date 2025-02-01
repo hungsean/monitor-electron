@@ -10,6 +10,8 @@ const VideoController = () => {
     
     const [start_time, setStartTime] = useState<string>('');
     const [end_time, setEndTime] = useState<string>('');
+    const [current_time, setCurrentTime] = useState<string>('');
+    const [video_length, setVideoLength] = useState<number>();
 
     useEffect(() => {
         setStartTime(data.START_REAL_TIME?.toString() ?? '');
@@ -17,12 +19,21 @@ const VideoController = () => {
     }, [data.START_REAL_TIME]);
 
     useEffect(() => {
-        console.log("start time changed: ", { start_time });
+        // console.log("start time changed: ", { start_time });
     }, [start_time]);
 
     useEffect(() => {
         setEndTime(data.END_REAL_TIME?.toString() ?? '');
     }, [data.END_REAL_TIME]);
+
+    useEffect(() => {
+        setCurrentTime(data.videoCurrentTime.toString());
+    }, [data.videoCurrentTime]);
+
+    useEffect(() => {
+        setVideoLength(data.videoLength);
+    }, [data.videoLength]);
+
 
 
 
@@ -73,7 +84,7 @@ const VideoController = () => {
     return (
         <Flex direction={'column'} align={'center'} gap={'2'}>
             <Flex gap={'2'}>
-                <TimeBox inputTime='22:10:30'></TimeBox>
+                <TimeBox inputTime={current_time}></TimeBox>
                 <ClipboardRoot value={""} timeout={400}>
                     <ClipboardIconButton />
                 </ClipboardRoot>

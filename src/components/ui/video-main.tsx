@@ -6,7 +6,7 @@ const VideoMain = () => {
 
     const [videoUrl, setVideoUrl] = useState<string | undefined>(undefined);
     const videoRef = useRef<HTMLVideoElement>(null);
-    const setData = useAppStore(state => state.setData);
+    const { setData } = useAppStore()
 
     useEffect(() => {
         // 訂閱更新視頻 URL 的事件
@@ -18,8 +18,31 @@ const VideoMain = () => {
         return () => unsubscribe();
     }, []);
 
+
+    const handleTimeUpdate = () => {
+        if (videoRef.current) {
+            setData({ videoCurrentTime: videoRef.current.currentTime });
+            // setData({ videoLength: videoRef.current.duration });
+            console.log("update time!", videoRef.current.currentTime);
+            // console.log("length: ", videoRef.current.duration);
+        }
+    };
+
+    const handleVideoLengthUpdate = () => {
+        if (videoRef.current) {
+            setData({ videoLength: videoRef.current.duration });
+            console.log("length: ", videoRef.current.duration);
+        }
+    }
+
     return (
-        <video controls key={videoUrl}>
+        <video
+            controls
+            key={videoUrl}
+            ref={videoRef}
+            onLoadedMetadata={handleVideoLengthUpdate}
+            onTimeUpdate={handleTimeUpdate}
+        >
             <source src={videoUrl} type="video/mp4" />
         </video>
     )
