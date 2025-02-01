@@ -8,13 +8,13 @@ const VideoController = () => {
 
     const { data, setData } = useAppStore()
     
-    const [start_time, setStartTime] = useState<string>('');
-    const [end_time, setEndTime] = useState<string>('');
+    const [start_time, setStartTime] = useState<TimeManager>();
+    const [end_time, setEndTime] = useState<TimeManager>();
     const [current_time, setCurrentTime] = useState<string>('');
     const [video_length, setVideoLength] = useState<number>();
 
     useEffect(() => {
-        setStartTime(data.START_REAL_TIME?.toString() ?? '');
+        setStartTime(data.START_REAL_TIME);
         console.log("start real time changed: ", { startTime: data.START_REAL_TIME?.toString() ?? '' })
     }, [data.START_REAL_TIME]);
 
@@ -23,7 +23,7 @@ const VideoController = () => {
     }, [start_time]);
 
     useEffect(() => {
-        setEndTime(data.END_REAL_TIME?.toString() ?? '');
+        setEndTime(data.END_REAL_TIME);
     }, [data.END_REAL_TIME]);
 
     useEffect(() => {
@@ -93,8 +93,8 @@ const VideoController = () => {
 
                 <Button size={'sm'} onClick={() => moveTimeHour(-1)}>-1</Button>
                 <Button size={'sm'} onClick={() => moveTimeMinute(-30)}>-30</Button>
-                <TimeBox inputTime={start_time}></TimeBox>
-                <TimeBox inputTime={end_time}></TimeBox>
+                <TimeBox inputTime={start_time?.toString() ?? ''}></TimeBox>
+                <TimeBox inputTime={end_time?.toString() ?? ''}></TimeBox>
                 <Button size={'sm'} onClick={() => moveTimeMinute(30)}>+30</Button>
                 <Button size={'sm'} onClick={() => moveTimeHour(1)}>+1</Button>
             </Flex>
