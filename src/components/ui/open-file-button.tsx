@@ -8,7 +8,7 @@ import TimeManager from "@/utils/time-manager";
 
 const OpenFileButton = () => {
 
-    const { data, setData } = useAppStore();
+    const { setData } = useAppStore();
 
     // temp testing function
     // const [videoUrl, setVideoUrl] = useState<string | undefined>(undefined);

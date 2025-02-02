@@ -5,7 +5,7 @@ import TimeManager from './time-manager';
 interface StoreData {
     START_REAL_TIME?: TimeManager;
     END_REAL_TIME?: TimeManager;
-    videoCurrentTime: number;
+    videoCurrentTime: TimeManager;
     videoLength: number;
     // 可以加入更多需要的欄位
 }
@@ -17,7 +17,7 @@ interface StoreState {
 
 export const useAppStore = create<StoreState>((set) => ({
     data: {
-        videoCurrentTime: 0,  // 初始化視頻時間
+        videoCurrentTime: new TimeManager(0),  // 初始化視頻時間
         videoLength: 0,
     },
     setData: (newData) =>

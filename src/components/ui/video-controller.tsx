@@ -27,16 +27,7 @@ const VideoController = () => {
     }, [data.END_REAL_TIME]);
 
     useEffect(() => {
-
-        const start_time_second = start_time?.toSeconds() ?? 0;
-        const end_time_second = end_time?.toSeconds() ?? 0;
-        const real_time_length = end_time_second - start_time_second
-        const temp_current_time = new TimeManager(start_time_second + (data.videoCurrentTime * real_time_length / video_length))
-        console.log(temp_current_time.toString())
-
-        setCurrentTime(temp_current_time);
-        
-
+        setCurrentTime(data.videoCurrentTime);
     }, [data.videoCurrentTime]);
 
     useEffect(() => {
