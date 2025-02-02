@@ -2,6 +2,8 @@
   "name": "electron-vite-project",
   "private": true,
   "version": "0.0.0",
+  "description": "My Electron App",
+  "author": "Senen",
   "type": "module",
   "scripts": {
     "dev": "vite",
