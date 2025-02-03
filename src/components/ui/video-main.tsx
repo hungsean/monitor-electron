@@ -86,16 +86,50 @@ const VideoMain = () => {
         togglePlayPause();
     });
 
-    useKeyDown('Digit4', () => {
+    const setSpeedRate = (rate: number) => {
         if (videoRef.current) {
-            videoRef.current.playbackRate = 4;
+            videoRef.current.playbackRate = rate;
         }
+    }
+
+    useKeyDown('Digit1', () => {
+        setSpeedRate(0.5);
+    })
+
+    useKeyDown('Digit2', () => {
+        setSpeedRate(2);
+    })
+
+    useKeyDown('Digit3', () => {
+        setSpeedRate(3);
+    })
+
+    useKeyDown('Digit4', () => {
+        setSpeedRate(4);
+    })
+
+    useKeyDown('Digit5', () => {
+        setSpeedRate(10);
+    })
+
+    useKeyUp('Digit1', () => {
+        setSpeedRate(1);
+    })
+
+    useKeyUp('Digit2', () => {
+        setSpeedRate(1);
+    })
+
+    useKeyUp('Digit3', () => {
+        setSpeedRate(1);
     })
 
     useKeyUp('Digit4', () => {
-        if (videoRef.current) {
-            videoRef.current.playbackRate = 1;
-        }
+        setSpeedRate(1);
+    })
+
+    useKeyUp('Digit5', () => {
+        setSpeedRate(1);
     })
 
     useKeyDown('AltLeft', () => {
@@ -157,8 +191,10 @@ const VideoMain = () => {
     })
 
     const readFromClipboard = async () => {
+        console.info("start read clipboard");
         try {
             const text = await navigator.clipboard.readText();
+            console.info("successful read text: ", text)
             return text;
         } catch (err) {
             console.error('Failed to read clipboard:', err);
@@ -174,6 +210,7 @@ const VideoMain = () => {
             if (regex.test(pasteTime)) {
                 console.log("start pasting")
                 if (videoRef.current) {
+                    console.info("videoRef current exist, start calculate");
                     const paste_time_second = new TimeManager(pasteTime).toSeconds();
                     const start_time_second = data.START_REAL_TIME?.toSeconds() ?? 0;
                     const paste_time_left = paste_time_second - start_time_second;
@@ -184,10 +221,10 @@ const VideoMain = () => {
 
                     videoRef.current.currentTime = video_current_second;
                     updateTime();
-                    console.log("paste time");
+                    console.info("paste time finished");
                 }
             } else {
-                console.log("no pass");
+                console.error("no pass");
             }
         }).catch(error => {
             console.error("Failed to read clipboard:", error);

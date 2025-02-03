@@ -85,9 +85,9 @@ const VideoController = () => {
         <Flex direction={'column'} align={'center'} gap={'2'}>
             <Flex gap={'2'}>
                 <TimeBox inputTime={current_time?.toString() ?? ''}></TimeBox>
-                <ClipboardRoot value={""} timeout={400}>
+                {/*<ClipboardRoot value={""} timeout={400}>
                     <ClipboardIconButton />
-                </ClipboardRoot>
+                </ClipboardRoot>*/}
             </Flex>
             <Flex gap={'2'}>
 

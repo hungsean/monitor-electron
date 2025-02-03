@@ -1,10 +1,15 @@
 import { useEffect } from 'react';
+import { PiRedditLogo } from 'react-icons/pi';
 
 export type KeyCode =
     | 'Space'
     | 'AltLeft'
     | 'AltRight'
+    | 'Digit1'
+    | 'Digit2'
+    | 'Digit3'
     | 'Digit4'
+    | 'Digit5'
     | 'KeyW'
     | 'KeyS'
     | 'KeyA'
@@ -44,38 +49,51 @@ const useKeyEvent = (
     }, [eventType, targetKeyCode, callback]);
 };
 
+const pressedKeys = new Set<string>();
+
 export const useKeyCombination = (
     targetKeyCodes: KeyCode[],
     callback: (() => void) 
 ) => {
     useEffect(() => {
-        const pressedKeys = new Set<string>();
-        let isProcessing = false;
+        
+        // let isProcessing = false;
 
-        const handleKeyDown = async (event: KeyboardEvent) => {
+        const handleKeyDown = (event: KeyboardEvent) => {
             pressedKeys.add(event.code);
+            console.info("pressed keys add: ", event.code);
+
+            console.log("pressed keys: ", pressedKeys);
 
             const allKeysPressed = targetKeyCodes.every(key => pressedKeys.has(key));
             const keysMatchExactly = pressedKeys.size === targetKeyCodes.length;
 
-            if (allKeysPressed && keysMatchExactly && !isProcessing) {
+            if (allKeysPressed && keysMatchExactly) {
                 event.preventDefault();
                 event.stopPropagation();
 
-                isProcessing = true;
+                // isProcessing = true;
                 try {
+                    console.info("start running callback");
+                    console.info("now pressed key: ", pressedKeys);
                     callback();
+                    console.info("finished running callback");
+                    console.info("now pressed key: ", pressedKeys);
                 } catch (error) {
                     console.error('Error in key combination callback:', error);
                 } finally {
-                    isProcessing = false;
-                    pressedKeys.clear();
+                    // isProcessing = false;
+                    // pressedKeys.clear();
+                    console.info("pressed keys cleared");
                 }
             }
         };
 
         const handleKeyUp = (event: KeyboardEvent) => {
+            console.info("handleKeyUp: now pressed key: ", pressedKeys)
             pressedKeys.delete(event.code);
+            console.log("pressed keys deleted: ", event.code);
+            console.info("handleKeyUp: now pressed key: ", pressedKeys)
         };
 
         window.addEventListener('keydown', handleKeyDown);
