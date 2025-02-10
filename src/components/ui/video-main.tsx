@@ -3,10 +3,13 @@ import { EVENT_TYPES, eventBus } from "@/utils/event-bus";
 import { useAppStore } from "@/utils/store";
 import TimeManager from "@/utils/time-manager";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Switch } from "../chakra-ui/switch";
+import { Box } from "@chakra-ui/react";
 
 const VideoMain = () => {
 
     const [videoUrl, setVideoUrl] = useState<string | undefined>(undefined);
+    const [videoControls, setVideoControls] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
     const rafRef = useRef<number>();
     const { data, setData } = useAppStore()
@@ -23,54 +26,65 @@ const VideoMain = () => {
 
     const handleVideoLengthUpdate = () => {
         if (videoRef.current) {
+            console.log("video length update")
             setData({ videoLength: videoRef.current.duration });
-            console.log("length: ", videoRef.current.duration);
         }
     }
 
-    const debounceUpdate = useCallback((fn: () => void) => {
-        let timeoutId: NodeJS.Timeout;
+    // 移除 debounceUpdate，改用 throttle
+    const throttleUpdate = useCallback((fn: () => void) => {
+        let lastRun = 0;
+        const limit = 200; // 200ms
+
         return () => {
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => {
+            const now = Date.now();
+            if (now - lastRun >= limit) {
                 fn();
-            }, 50); 
+                lastRun = now;
+            }
         };
     }, []);
 
-    const updateTime = useCallback(() => {
-        if (videoRef.current) {
-            const updateStore = debounceUpdate(() => {
-                const start_time_second = data.START_REAL_TIME?.toSeconds() ?? 0;
-                const end_time_second = data.END_REAL_TIME?.toSeconds() ?? 0;
-                const real_time_length = end_time_second - start_time_second;
-                const temp_current_time = new TimeManager(
-                    start_time_second +
-                    (videoRef.current!.currentTime * real_time_length / videoRef.current!.duration)
-                );
+    const updateStore = throttleUpdate(() => {
+        const start_time_second = data.START_REAL_TIME?.toSeconds() ?? 0;
+        const end_time_second = data.END_REAL_TIME?.toSeconds() ?? 0;
+        const real_time_length = end_time_second - start_time_second;
+        const temp_current_time = new TimeManager(
+            start_time_second +
+            (videoRef.current!.currentTime * real_time_length / videoRef.current!.duration)
+        );
 
-                setData({ videoCurrentTime: temp_current_time });
-            });
+        console.log("current time update");
+        setData({ videoCurrentTime: temp_current_time });
+    });
 
-            updateStore();
-        }
+    // const updateTime = useCallback(() => {
+    //     if (videoRef.current) {
+            
 
-        rafRef.current = requestAnimationFrame(updateTime);
-    }, [data.START_REAL_TIME, data.END_REAL_TIME, setData]);
+    //         updateStore();
+    //     }
 
+    //     rafRef.current = requestAnimationFrame(updateTime);
+    // }, [data.START_REAL_TIME, data.END_REAL_TIME, setData]);
 
-    const handlePlay = () => {
-        updateTime();
-    };
-
+    // 添加清理函數
     useEffect(() => {
-        // 清理函數
         return () => {
             if (rafRef.current) {
                 cancelAnimationFrame(rafRef.current);
             }
         };
     }, []);
+
+    // useEffect(() => {
+    //     // 清理函數
+    //     return () => {
+    //         if (rafRef.current) {
+    //             cancelAnimationFrame(rafRef.current);
+    //         }
+    //     };
+    // }, []);
 
     const togglePlayPause = () => {
         if (videoRef.current) {
@@ -132,9 +146,12 @@ const VideoMain = () => {
         setSpeedRate(1);
     })
 
+
+
     useKeyDown('AltLeft', () => {
         if (videoRef.current) {
             videoRef.current.play();
+            
         }
     })
 
@@ -153,7 +170,7 @@ const VideoMain = () => {
             const video_skip_second = real_second * video_time_length / real_time_length;
             
             videoRef.current.currentTime += video_skip_second;
-            updateTime();
+            updateStore();
             // setData({ videoCurrentTime: videoRef.current.currentTime });
         }
     }
@@ -220,7 +237,7 @@ const VideoMain = () => {
                     const video_current_second = (paste_time_left * video_time_length) / real_time_length;
 
                     videoRef.current.currentTime = video_current_second;
-                    updateTime();
+                    updateStore();
                     console.info("paste time finished");
                 }
             } else {
@@ -232,20 +249,35 @@ const VideoMain = () => {
     })
 
     return (
-        <video
-            controls
-            key={videoUrl}
-            ref={videoRef}
-            onLoadedMetadata={handleVideoLengthUpdate}
-            onPlay={handlePlay}
-            onPause={() => {
-                if (rafRef.current) {
-                    cancelAnimationFrame(rafRef.current);
-                }
-            }}
-        >
-            <source src={videoUrl} type="video/mp4" />
-        </video>
+        <Box>
+            <video
+                // controls
+                key={videoUrl}
+                ref={videoRef}
+                preload="auto"
+                controls={videoControls}
+                onLoadedMetadata={handleVideoLengthUpdate}
+                // onPlay={handlePlay}
+                // onPause={() => {
+                //     if (rafRef.current) {
+                //         cancelAnimationFrame(rafRef.current);
+                //     }
+                // }}
+                onTimeUpdate={() => {
+                    // 在這裡更新時間
+                    // const updateStore = throttleUpdate(() => {
+                    //     // ... 時間更新邏輯
+                    //     updateTime()
+                    // });
+                    updateStore();
+                }}
+                
+            >
+                <source src={videoUrl} type="video/mp4" />
+            </video>
+            <Switch checked={videoControls} onCheckedChange={(e) => setVideoControls(e.checked)} ></Switch>
+        </Box>
+        
     )
 }
 

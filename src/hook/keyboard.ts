@@ -27,16 +27,33 @@ const useKeyEvent = (
     callback: (() => void) | (() => Promise<void>)
 ) => {
     useEffect(() => {
+        let isLocked = false;
+
         const handleKeyPress = async (event: KeyboardEvent) => {
-            if (event.code === targetKeyCode) {
+            if (event.code === targetKeyCode && !isLocked) {
                 event.preventDefault();
                 event.stopPropagation();
                 window.ipcRenderer.send('key-intercepted', event.code);
 
                 try {
+                    isLocked = true;
+                    console.log("running callback")
                     await callback();
                 } catch (error) {
                     console.error('Error in key event callback:', error);
+                } finally {
+                    // 在 keyup 時解除鎖定
+                    if (eventType === 'keydown') {
+                        const unlockHandler = () => {
+                            if (event.code === targetKeyCode) {
+                                isLocked = false;
+                                window.removeEventListener('keyup', unlockHandler);
+                            }
+                        };
+                        window.addEventListener('keyup', unlockHandler);
+                    } else {
+                        isLocked = false;
+                    }
                 }
             }
         };

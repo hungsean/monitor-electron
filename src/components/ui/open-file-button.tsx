@@ -36,7 +36,7 @@ const OpenFileButton = () => {
             {
                 end_time.addHours(24);
             }
-            
+            console.log("realtime update");
             setData({ START_REAL_TIME: start_time });
             setData({ END_REAL_TIME: end_time });
 

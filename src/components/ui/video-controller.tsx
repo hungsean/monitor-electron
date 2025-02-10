@@ -63,6 +63,7 @@ const VideoController = () => {
             const newEndRealTime = new TimeManager(currentEndRealTime.toString());
             newStartRealTime.addHours(time);
             newEndRealTime.addHours(time);
+            console.log("realtime update");
             setData({ START_REAL_TIME: newStartRealTime })
             setData({ END_REAL_TIME: newEndRealTime })
         }
@@ -76,6 +77,7 @@ const VideoController = () => {
             const newEndRealTime = new TimeManager(currentEndRealTime.toString());
             newStartRealTime.addMinutes(time);
             newEndRealTime.addMinutes(time);
+            console.log("realtime update");
             setData({ START_REAL_TIME: newStartRealTime })
             setData({ END_REAL_TIME: newEndRealTime })
         }

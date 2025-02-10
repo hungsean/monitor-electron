@@ -17,11 +17,13 @@ interface StoreState {
 
 export const useAppStore = create<StoreState>((set) => ({
     data: {
-        videoCurrentTime: new TimeManager(0),  // 初始化視頻時間
+        videoCurrentTime: new TimeManager(0),
         videoLength: 0,
     },
     setData: (newData) =>
-        set((state) => ({
-            data: { ...state.data, ...newData }
-        })),
+        set((state) => {
+            const updatedData = { ...state.data, ...newData };
+            console.log('Store data updated:', updatedData);
+            return { data: updatedData };
+        }),
 }));

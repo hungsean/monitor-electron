@@ -31,6 +31,7 @@ const EditDialog = () => {
     function updateTime(): void{
         const start_time = new TimeManager(start_time_string);
         const end_time = new TimeManager(end_time_string);
+        console.log("realtime update");
         setData({ START_REAL_TIME: start_time });
         setData({ END_REAL_TIME: end_time });
     }
