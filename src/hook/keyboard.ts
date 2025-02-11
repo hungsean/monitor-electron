@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { PiRedditLogo } from 'react-icons/pi';
 
 export type KeyCode =
     | 'Space'
@@ -21,52 +20,61 @@ export type KeyCode =
 
 type KeyEventType = 'keydown' | 'keyup';
 
+const pressedKeySet = new Set<KeyCode>();
+
 const useKeyEvent = (
     eventType: KeyEventType,
     targetKeyCode: KeyCode,
     callback: (() => void) | (() => Promise<void>)
 ) => {
     useEffect(() => {
-        let isLocked = false;
-
         const handleKeyPress = async (event: KeyboardEvent) => {
-            if (event.code === targetKeyCode && !isLocked) {
+            console.log("now key set: ", pressedKeySet);
+            if (event.code === targetKeyCode) {
                 event.preventDefault();
                 event.stopPropagation();
                 window.ipcRenderer.send('key-intercepted', event.code);
 
+                // 如果是 keydown 且該按鍵已經在 Set 中，則不執行
+                if (eventType === 'keydown' && pressedKeySet.has(targetKeyCode)) {
+                    return;
+                }
+
+                // 如果是 keydown，將按鍵加入 Set
+                if (eventType === 'keydown') {
+                    pressedKeySet.add(targetKeyCode);
+                }
+
+                // if (eventType === 'keyup') {
+                //     pressedKeySet.delete(targetKeyCode);
+                // }
+
                 try {
-                    isLocked = true;
                     console.log("running callback")
                     await callback();
                 } catch (error) {
                     console.error('Error in key event callback:', error);
-                } finally {
-                    // 在 keyup 時解除鎖定
-                    if (eventType === 'keydown') {
-                        const unlockHandler = () => {
-                            if (event.code === targetKeyCode) {
-                                isLocked = false;
-                                window.removeEventListener('keyup', unlockHandler);
-                            }
-                        };
-                        window.addEventListener('keyup', unlockHandler);
-                    } else {
-                        isLocked = false;
-                    }
                 }
             }
         };
 
+        const handleKeyUp = (event: KeyboardEvent) => {
+            if (event.code === targetKeyCode) {
+                pressedKeySet.delete(targetKeyCode);
+            }
+        };
+
         window.addEventListener(eventType, handleKeyPress);
+        window.addEventListener('keyup', handleKeyUp);
 
         return () => {
             window.removeEventListener(eventType, handleKeyPress);
+            window.removeEventListener('keyup', handleKeyUp);
         };
     }, [eventType, targetKeyCode, callback]);
 };
 
-const pressedKeys = new Set<string>();
+const pressedKeySetMultiple = new Set<string>();
 
 export const useKeyCombination = (
     targetKeyCodes: KeyCode[],
@@ -77,13 +85,13 @@ export const useKeyCombination = (
         // let isProcessing = false;
 
         const handleKeyDown = (event: KeyboardEvent) => {
-            pressedKeys.add(event.code);
-            console.info("pressed keys add: ", event.code);
+            pressedKeySetMultiple.add(event.code);
+            // console.info("pressed keys add: ", event.code);
 
-            console.log("pressed keys: ", pressedKeys);
+            // console.log("pressed keys: ", pressedKeySetMultiple);
 
-            const allKeysPressed = targetKeyCodes.every(key => pressedKeys.has(key));
-            const keysMatchExactly = pressedKeys.size === targetKeyCodes.length;
+            const allKeysPressed = targetKeyCodes.every(key => pressedKeySetMultiple.has(key));
+            const keysMatchExactly = pressedKeySetMultiple.size === targetKeyCodes.length;
 
             if (allKeysPressed && keysMatchExactly) {
                 event.preventDefault();
@@ -91,26 +99,26 @@ export const useKeyCombination = (
 
                 // isProcessing = true;
                 try {
-                    console.info("start running callback");
-                    console.info("now pressed key: ", pressedKeys);
+                    // console.info("start running callback");
+                    // console.info("now pressed key: ", pressedKeySetMultiple);
                     callback();
-                    console.info("finished running callback");
-                    console.info("now pressed key: ", pressedKeys);
+                    // console.info("finished running callback");
+                    // console.info("now pressed key: ", pressedKeySetMultiple);
                 } catch (error) {
-                    console.error('Error in key combination callback:', error);
+                    // console.error('Error in key combination callback:', error);
                 } finally {
                     // isProcessing = false;
                     // pressedKeys.clear();
-                    console.info("pressed keys cleared");
+                    // console.info("pressed keys cleared");
                 }
             }
         };
 
         const handleKeyUp = (event: KeyboardEvent) => {
-            console.info("handleKeyUp: now pressed key: ", pressedKeys)
-            pressedKeys.delete(event.code);
-            console.log("pressed keys deleted: ", event.code);
-            console.info("handleKeyUp: now pressed key: ", pressedKeys)
+            // console.info("handleKeyUp: now pressed key: ", pressedKeySetMultiple)
+            pressedKeySetMultiple.delete(event.code);
+            // console.log("pressed keys deleted: ", event.code);
+            // console.info("handleKeyUp: now pressed key: ", pressedKeySetMultiple)
         };
 
         window.addEventListener('keydown', handleKeyDown);

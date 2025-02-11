@@ -58,7 +58,7 @@ const OpenFileButton = () => {
                 style={{ display: 'none' }}
             />
             <Button onClick={handleUploadClick}>
-                <CiSaveUp2 /> Upload file
+                <CiSaveUp2 /> open file
             </Button>
         </>
     )

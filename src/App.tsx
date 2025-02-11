@@ -1,4 +1,4 @@
-import { Button, Flex } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import '@/App.css'
 
 import OpenFileButton from './components/ui/open-file-button'
@@ -20,7 +20,7 @@ function App() {
                 </Flex>
                 <Flex flex={'1'} justify={'flex-end'} gap={'2'}>
                     <EditDialog/>
-                    <Button>dark mode</Button>
+                    {/* <Button>dark mode</Button> */}
                 </Flex>
             </Flex>
         )

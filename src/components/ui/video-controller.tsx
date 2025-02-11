@@ -1,5 +1,4 @@
 import { Box, Center, Text, Flex, Button } from "@chakra-ui/react";
-import { ClipboardRoot, ClipboardIconButton } from "../chakra-ui/clipboard";
 import { useAppStore } from "@/utils/store";
 import { useEffect, useState } from "react";
 import TimeManager from "@/utils/time-manager";
@@ -11,7 +10,7 @@ const VideoController = () => {
     const [start_time, setStartTime] = useState<TimeManager>();
     const [end_time, setEndTime] = useState<TimeManager>();
     const [current_time, setCurrentTime] = useState<TimeManager>();
-    const [video_length, setVideoLength] = useState<number>(0);
+    // const [video_length, setVideoLength] = useState<number>(0);
 
     useEffect(() => {
         setStartTime(data.START_REAL_TIME);
@@ -30,9 +29,9 @@ const VideoController = () => {
         setCurrentTime(data.videoCurrentTime);
     }, [data.videoCurrentTime]);
 
-    useEffect(() => {
-        setVideoLength(data.videoLength);
-    }, [data.videoLength]);
+    // useEffect(() => {
+    //     setVideoLength(data.videoLength);
+    // }, [data.videoLength]);
 
 
 
@@ -92,13 +91,14 @@ const VideoController = () => {
                 </ClipboardRoot>*/}
             </Flex>
             <Flex gap={'2'}>
-
+                <Button size={'sm'} onClick={() => moveTimeHour(-24)}>-24</Button>
                 <Button size={'sm'} onClick={() => moveTimeHour(-1)}>-1</Button>
                 <Button size={'sm'} onClick={() => moveTimeMinute(-30)}>-30</Button>
                 <TimeBox inputTime={start_time?.toString() ?? ''}></TimeBox>
                 <TimeBox inputTime={end_time?.toString() ?? ''}></TimeBox>
                 <Button size={'sm'} onClick={() => moveTimeMinute(30)}>+30</Button>
                 <Button size={'sm'} onClick={() => moveTimeHour(1)}>+1</Button>
+                <Button size={'sm'} onClick={() => moveTimeHour(24)}>24</Button>
             </Flex>
         </Flex>
     )

@@ -4,7 +4,7 @@ import { useAppStore } from "@/utils/store";
 import TimeManager from "@/utils/time-manager";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Switch } from "../chakra-ui/switch";
-import { Box } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
 const VideoMain = () => {
 
@@ -275,7 +275,11 @@ const VideoMain = () => {
             >
                 <source src={videoUrl} type="video/mp4" />
             </video>
-            <Switch checked={videoControls} onCheckedChange={(e) => setVideoControls(e.checked)} ></Switch>
+            <Flex>
+                <Switch checked={videoControls} onCheckedChange={(e) => setVideoControls(e.checked)} ></Switch>
+                <Text>Controller</Text>
+            </Flex>
+            
         </Box>
         
     )
