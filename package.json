@@ -1,8 +1,8 @@
 {
-  "name": "electron-vite-project",
+  "name": "monitor-electron",
   "private": true,
-  "version": "0.0.1",
-  "description": "My Electron App",
+  "version": "0.1.0",
+  "description": "Monitor Electron",
   "author": "Senen",
   "type": "module",
   "scripts": {
