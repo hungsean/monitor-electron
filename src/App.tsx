@@ -5,6 +5,7 @@ import OpenFileButton from './components/ui/open-file-button'
 import VideoController from './components/ui/video-controller'
 import EditDialog from './components/ui/edit-dialog'
 import VideoMain from './components/ui/video-main'
+import { VideoMerger } from './components/ui/video-manager'
 
 function App() {
     
@@ -13,7 +14,8 @@ function App() {
         return (
             <Flex width={'100%'} justify={'space-between'} padding={'15px'}>
                 <Flex flex={'1'} justify={'flex-start'}>
-                    <OpenFileButton/>
+                    <OpenFileButton />
+                    <VideoMerger/>
                 </Flex>
                 <Flex flex={'1'} justify={'center'}>
                     <VideoController/>
