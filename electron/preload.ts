@@ -19,8 +19,10 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     return ipcRenderer.invoke(channel, ...omit)
   },
 
-  mergeVideos: (filePaths: string[]) => ipcRenderer.invoke('merge-videos', filePaths)
-
   // You can expose other APTs you need here.
   // ...
+})
+
+contextBridge.exposeInMainWorld('electron', {
+  mergeVideos: (filePaths: string[]) => ipcRenderer.invoke('merge-videos', filePaths)
 })

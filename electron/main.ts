@@ -7,7 +7,8 @@ import ffmpeg from 'fluent-ffmpeg'
 import ffmpegPath from '@ffmpeg-installer/ffmpeg'
 
 // const require = createRequire(import.meta.url)
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // The built directory structure
 //
@@ -105,15 +106,20 @@ ipcMain.handle('merge-videos', async (_event, filePaths: string[]) => {
 
 
 function createWindow() {
+  // const preloadPath = new URL('./preload.mjs', import.meta.url).pathname
+  const iconPath = new URL('./public/electron-vite.svg', import.meta.url).pathname
+  const indexHtmlPath = new URL('../dist/index.html', import.meta.url).pathname
+
   win = new BrowserWindow({
     title: "monitor-electron",
-    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    icon: iconPath,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.mjs'),
-    },
+    preload: path.join(__dirname, 'preload.mjs'),
+    contextIsolation: true,
+    nodeIntegration: false,
+  }
   })
 
-  // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
   })
@@ -121,8 +127,7 @@ function createWindow() {
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
   } else {
-    // win.loadFile('dist/index.html')
-    win.loadFile(path.join(RENDERER_DIST, 'index.html'))
+    win.loadFile(indexHtmlPath)
   }
 }
 
