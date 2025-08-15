@@ -1,9 +1,9 @@
 {
   "name": "monitor-electron",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Monitor Electron",
-  "author": "Senen",
+  "author": "hungsean",
   "type": "module",
   "scripts": {
     "dev": "vite",
