@@ -16,6 +16,8 @@ export type KeyCode =
     | 'KeyC'
     | 'KeyV'
     | 'ControlLeft'
+    | 'MetaLeft'
+    | 'MetaRight'
     /*add more*/;
 
 type KeyEventType = 'keydown' | 'keyup';
@@ -138,4 +140,10 @@ export const useKeyDown = (targetKeyCode: KeyCode, callback: () => void) => {
 
 export const useKeyUp = (targetKeyCode: KeyCode, callback: () => void) => {
     useKeyEvent('keyup', targetKeyCode, callback);
+};
+
+// 獲取平台適當的修飾鍵
+export const getPlatformModifierKey = (): KeyCode => {
+    const isMac = navigator.userAgent.toUpperCase().indexOf('MAC') >= 0;
+    return isMac ? 'MetaLeft' : 'ControlLeft';
 };

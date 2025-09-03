@@ -1,4 +1,4 @@
-import { useKeyCombination, useKeyDown, useKeyUp } from "@/hook/keyboard";
+import { useKeyCombination, useKeyDown, useKeyUp, getPlatformModifierKey } from "@/hook/keyboard";
 import { EVENT_TYPES, eventBus } from "@/utils/event-bus";
 import { useAppStore } from "@/utils/store";
 import TimeManager from "@/utils/time-manager";
@@ -203,7 +203,7 @@ const VideoMain = () => {
             });
     };
 
-    useKeyCombination(['ControlLeft', 'KeyC'], () => {
+    useKeyCombination([getPlatformModifierKey(), 'KeyC'], () => {
         copyToClipboard(data.videoCurrentTime.toString())
     })
 
@@ -219,8 +219,8 @@ const VideoMain = () => {
         }
     };
 
-    useKeyCombination(['ControlLeft', 'KeyV'], () => {
-        console.log("get ctrl+v");
+    useKeyCombination([getPlatformModifierKey(), 'KeyV'], () => {
+        console.log("get " + (getPlatformModifierKey() === 'MetaLeft' ? 'cmd+v' : 'ctrl+v'));
 
         readFromClipboard().then(pasteTime => {
             const regex = /^-?([0-9]|[0-9][0-9]):([0-5][0-9]):([0-5][0-9])$/;
